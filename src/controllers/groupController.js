@@ -11,6 +11,15 @@ const createGroup = async (req, res) => {
   }
 };
 
+const fetchGroups = async (req, res) => {
+  try {
+    const groups = await Group.find();
+    res.json(groups);
+  } catch (err) {
+    res.status(400).send(err.message);
+  }
+};
+
 const joinGroup = async (req, res) => {
   const { groupId } = req.params;
   try {
@@ -39,4 +48,4 @@ const leaveGroup = async (req, res) => {
   }
 };
 
-module.exports = { createGroup, joinGroup, leaveGroup };
+module.exports = { createGroup, fetchGroups, joinGroup, leaveGroup };
