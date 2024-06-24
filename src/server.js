@@ -7,6 +7,7 @@ const groupRoutes = require("./routes/groupRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { authenticateToken } = require("./middleware/authMiddleware");
 const socketIoSetup = require("./socket");
+const healthRoutes = require("./routes/healthRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/groups", authenticateToken, groupRoutes);
 app.use("/api/messages", authenticateToken, messageRoutes);
+app.use("/api/health", healthRoutes);
 
 mongoose
   .connect(process.env.MONGODB_URI, {
