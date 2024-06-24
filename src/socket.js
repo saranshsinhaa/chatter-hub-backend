@@ -1,26 +1,63 @@
-const Group = require("./models/Group");
-const Message = require("./models/Message");
+const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
+const Message = require("./models/Message"); // Adjust the path as per your project structure
 
-const handleSocketConnection = (socket, io) => {
-  socket.on("joinGroup", async ({ groupId, userId }) => {
-    socket.join(groupId);
-    io.to(groupId).emit("userJoined", { userId });
+module.exports = (server) => {
+  const io = new Server(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
   });
 
-  socket.on("leaveGroup", async ({ groupId, userId }) => {
-    socket.leave(groupId);
-    io.to(groupId).emit("userLeft", { userId });
+  io.on("connection", (socket) => {
+    console.log("a user connected");
+
+    socket.on("joinGroup", ({ groupId, token }) => {
+      jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return;
+        socket.join(groupId);
+        console.log(`User ${user.username} joined group ${groupId}`);
+      });
+    });
+
+    socket.on("leaveGroup", ({ groupId, token }) => {
+      jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) return;
+        socket.leave(groupId);
+        console.log(`User ${user.username} left group ${groupId}`);
+      });
+    });
+
+    socket.on("sendMessage", ({ groupId, token, content }) => {
+      jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+        if (err) return;
+
+        try {
+          const message = new Message({
+            groupId,
+            sender: user.id, // Assuming `user.id` is the correct ID field from JWT payload
+            content,
+          });
+          await message.save();
+
+          io.to(groupId).emit("newMessage", {
+            sender: {
+              username: user.username,
+              _id: user.id,
+            },
+            content,
+          });
+        } catch (error) {
+          console.error("Error saving message:", error);
+        }
+      });
+    });
+
+    socket.on("disconnect", () => {
+      console.log("user disconnected");
+    });
   });
 
-  socket.on("sendMessage", async ({ groupId, sender, content }) => {
-    const message = new Message({ groupId, sender, content });
-    await message.save();
-    io.to(groupId).emit("newMessage", { message: message.toObject() });
-  });
-
-  socket.on("disconnect", () => {
-    // Handle user disconnection if needed
-  });
+  return io;
 };
-
-module.exports = { handleSocketConnection };

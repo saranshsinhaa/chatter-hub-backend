@@ -1,23 +1,16 @@
-require("dotenv").config();
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const { Server } = require("socket.io");
 const userRoutes = require("./routes/userRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { authenticateToken } = require("./middleware/authMiddleware");
-const { handleSocketConnection } = require("./socket");
+const socketIoSetup = require("./socket"); // Adjust the path as needed
+require("dotenv").config();
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-  },
-});
 
 // Middleware
 app.use(cors());
@@ -36,15 +29,14 @@ mongoose
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
-    console.error(err);
+    console.error("MongoDB connection error:", err);
   });
 
-// Handle WebSocket connections
-io.on("connection", (socket) => {
-  handleSocketConnection(socket, io);
-});
+// Initialize Socket.IO
+const io = socketIoSetup(server);
 
-const PORT = process.env.PORT || 3000;
+// Server listens on specified port
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
