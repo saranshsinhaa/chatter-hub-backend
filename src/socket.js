@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
-const Message = require("./models/Message"); // Adjust the path as per your project structure
+const Message = require("./models/Message");
 
 module.exports = (server) => {
   const io = new Server(server, {
@@ -36,7 +36,7 @@ module.exports = (server) => {
         try {
           const message = new Message({
             groupId,
-            sender: user.id, // Assuming `user.id` is the correct ID field from JWT payload
+            sender: user.id,
             content,
           });
           await message.save();
