@@ -1,5 +1,15 @@
 # Chatter Hub: Group Chat WebApp
 
+## Architecture Diagram
+
+![image](https://github.com/saranshsinhaa/chatter-hub-backend/assets/77010352/fd29de2d-10f1-46cd-9aa7-a4e48f5a97ce)
+
+![image](https://github.com/saranshsinhaa/chatter-hub-backend/assets/77010352/02ba6d60-0c84-4ab6-b31e-642e8625805d)
+
+
+
+
+
 ## API Documentation
 
 This API documentation provides details about the RESTful APIs available in the Chat Application. The application allows users to register, login, create groups, join/leave groups, and send/receive messages within groups.
