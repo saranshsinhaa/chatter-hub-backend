@@ -1,36 +1,64 @@
-# Chatter Hub : Group Chat WebApp
+# Chatter Hub: Group Chat WebApp
 
-# API Documentation
+## API Documentation
 
 This API documentation provides details about the RESTful APIs available in the Chat Application. The application allows users to register, login, create groups, join/leave groups, and send/receive messages within groups.
 
 ## Table of Contents
 
-1. [Authentication](#authentication)
-
+1. [Health Check](#health-check)
+2. [Authentication](#authentication)
    - [Register User](#register-user)
    - [Login User](#login-user)
-
-2. [Groups](#groups)
-
+3. [Groups](#groups)
    - [Create Group](#create-group)
    - [Fetch All Groups](#fetch-all-groups)
    - [Join Group](#join-group)
    - [Leave Group](#leave-group)
-
-3. [Messages](#messages)
-
+4. [Messages](#messages)
    - [Get Messages by Group ID](#get-messages-by-group-id)
-
-4. [Setup](#setup)
-
+5. [Setup](#setup)
    - [Prerequisites](#prerequisites)
    - [Installation](#installation)
    - [Environment Variables](#environment-variables)
    - [Running the Server](#running-the-server)
+6. [Contributing](#contributing)
+7. [License](#license)
 
-5. [Contributing](#contributing)
-6. [License](#license)
+---
+
+## Health Check
+
+Provides detailed information about the server's health and system statistics.
+
+- **URL:** `/api/health`
+- **Method:** `GET`
+- **Success Response:**
+  - **Code:** 200 OK
+  - **Content:**
+    ```json
+    {
+      "status": true,
+      "message": {
+        "message": "🛠️ API v1 working!",
+        "timestamp": "Wed, 25 Jun 2024 15:24:00 GMT",
+        "cpus": [ ... ],
+        "architecture": "x64",
+        "networkInterfaces": { ... },
+        "totalMemory": 16777216,
+        "freeMemory": 10485760,
+        "platform": "linux",
+        "osType": "Linux",
+        "osRelease": "5.4.0-42-generic",
+        "osVersion": "#46-Ubuntu SMP Fri Jul 10 00:24:02 UTC 2020",
+        "hostname": "localhost",
+        "userInfo": { ... },
+        "serverUptime": "00:10:34",
+        "osUptime": "00:34:56",
+        "reqIP": "192.168.1.1"
+      }
+    }
+    ```
 
 ---
 
@@ -43,21 +71,16 @@ Registers a new user with a unique username and hashed password.
 - **URL:** `/api/users/register`
 - **Method:** `POST`
 - **Request Body:**
-
   ```json
   {
     "username": "string",
     "password": "string"
   }
   ```
-
 - **Success Response:**
-
   - **Code:** 201 CREATED
   - **Content:** `"User registered"`
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `"Username already exists"` (if username is not unique)
     - **Content:** `Error message` (other validation or database errors)
@@ -69,16 +92,13 @@ Logs in an existing user with username and password, returns a JWT token.
 - **URL:** `/api/users/login`
 - **Method:** `POST`
 - **Request Body:**
-
   ```json
   {
     "username": "string",
     "password": "string"
   }
   ```
-
 - **Success Response:**
-
   - **Code:** 200 OK
   - **Content:**
     ```json
@@ -87,9 +107,7 @@ Logs in an existing user with username and password, returns a JWT token.
       "username": "string"
     }
     ```
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `"Invalid credentials"`
   - **Code:** 404 NOT FOUND
@@ -109,20 +127,15 @@ Creates a new group with a unique name.
 - **Method:** `POST`
 - **Authorization:** Required (Bearer token)
 - **Request Body:**
-
   ```json
   {
     "name": "string"
   }
   ```
-
 - **Success Response:**
-
   - **Code:** 201 CREATED
   - **Content:** Group object (including group ID and name)
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `Error message` (validation or database errors)
 
@@ -134,12 +147,9 @@ Fetches all groups.
 - **Method:** `GET`
 - **Authorization:** Required (Bearer token)
 - **Success Response:**
-
   - **Code:** 200 OK
   - **Content:** Array of group objects
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `Error message` (database errors)
 
@@ -151,12 +161,9 @@ Allows a user to join an existing group.
 - **Method:** `POST`
 - **Authorization:** Required (Bearer token)
 - **Success Response:**
-
   - **Code:** 200 OK
   - **Content:** Updated group object (including updated members list)
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `Error message` (validation or database errors)
 
@@ -168,12 +175,9 @@ Allows a user to leave an existing group.
 - **Method:** `POST`
 - **Authorization:** Required (Bearer token)
 - **Success Response:**
-
   - **Code:** 200 OK
   - **Content:** Updated group object (including updated members list)
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `Error message` (validation or database errors)
 
@@ -189,12 +193,9 @@ Retrieves all messages associated with a specific group.
 - **Method:** `GET`
 - **Authorization:** Required (Bearer token)
 - **Success Response:**
-
   - **Code:** 200 OK
   - **Content:** Array of message objects
-
 - **Error Responses:**
-
   - **Code:** 400 BAD REQUEST
     - **Content:** `Error message` (database errors)
 
@@ -217,7 +218,6 @@ Retrieves all messages associated with a specific group.
    ```
 
 2. Install dependencies:
-
    ```bash
    npm install
    ```
@@ -265,6 +265,8 @@ Contributions are welcome! Fork the repository and submit a pull request.
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
+
+---
 
 ### Notes:
 
